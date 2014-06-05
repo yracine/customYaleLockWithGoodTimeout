@@ -5,8 +5,12 @@ customYaleLockWithGoodTimeout
 Author: Yves Racine
 linkedIn profile: ca.linkedin.com/pub/yves-racine-m-sc-a/0/406/4b/
 Date: 2014-06-05
+
 Code: https://gihttps://github.com/yracine/customYaleLockWithGoodTimeout
+
 INSTALLATION STEPS
+-------------------
+
 
 1) Create a new device type (https://graph.api.smartthings.com/ide/devices)
 
