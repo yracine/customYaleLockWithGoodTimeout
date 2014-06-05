@@ -16,7 +16,9 @@ INSTALLATION STEPS
 1) Create a new device type (https://graph.api.smartthings.com/ide/devices)
 
   Name: MyCustomYaleLock
+  
   Author: Yves Racine
+  
   copy and paste the code from customlockdevice.groovy
   
 3) Change your existing lock's device type to the new device type (https://graph.api.smartthings.com/device/list)
