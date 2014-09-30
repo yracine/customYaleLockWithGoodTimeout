@@ -23,4 +23,4 @@ INSTALLATION STEPS
   
 2) Change your existing lock's device type to the new device type (https://graph.api.smartthings.com/device/list)
 
-  Type: MyCustomYaleLock (should be the last option)
+  Type: Custom Lock Device (should be the last option)
