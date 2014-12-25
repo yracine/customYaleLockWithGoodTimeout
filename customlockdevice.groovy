@@ -28,7 +28,10 @@ metadata {
 		attribute "user1", "string"
 		attribute "code1", "string"
 
+        
+        
 		command "usercodechange"
+
 	}
 
 	simulator {
@@ -274,16 +277,19 @@ def zwaveEvent(physicalgraph.zwave.commands.batteryv1.BatteryReport cmd) {
 	}
 	createEvent(map)
 }
-
+ 
 //User
-def usercodechange(user1, code1, idstatus1) {
-    log.debug "Set $code1 for User $user1"
-    log.debug "Set User ID Status to $idstatus1"
+
+def usercodechange(user1, String code1, idstatus1) {
+    log.debug "CustomLock> Set $code1 for User $user1"
+    log.debug "CustomLock> Set User ID Status to $idstatus1"
     secureSequence([
         zwave.userCodeV1.userCodeSet(userIdentifier: user1, userIdStatus: idstatus1, code: code1),
         zwave.userCodeV1.userCodeGet(userIdentifier: user1)
     ], 4200)
 }
+
+
 
 def zwaveEvent(physicalgraph.zwave.commands.usercodev1.UserCodeReport cmd) {
     log.debug "$cmd"
