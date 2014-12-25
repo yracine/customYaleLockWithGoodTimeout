@@ -51,7 +51,12 @@ def controllerSetup() {
 def usersSetup() {
 
 	dynamicPage(name: "usersSetup", title: "Users Setup", nextPage: Notifications) {
-
+/*
+	section("Delete User" ) {
+		input "deleteUser", title: "Lock User id ", "string", description: "Lock User ", required: false
+		input "deleteCode", "text", title: "Code", required: false
+	}
+*/
     	for (int i = 1; ((i <= settings.usersCount) && (i<= 10)); i++) {
 	    	section("User " + i + " Setup") {
 				input "userName" + i, title: "User Name", "string", description: "User Name " + i, required: false
