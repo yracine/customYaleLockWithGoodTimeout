@@ -48,7 +48,7 @@ def appTouch(evt) {
     } else {
         idstatus1 = 1
     }
-    lock1.usercodechange(user1, code1, idstatus1)
+    lock1.usercodechange(user1, code1.toString(), idstatus1)
   
 }
 
