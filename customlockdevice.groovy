@@ -286,7 +286,7 @@ def usercodechange(user1, String code1, idstatus1) {
     secureSequence([
         zwave.userCodeV1.userCodeSet(userIdentifier: user1, userIdStatus: idstatus1, code: code1),
         zwave.userCodeV1.userCodeGet(userIdentifier: user1)
-    ], 4200)
+    ], 7000)
 }
 
 
