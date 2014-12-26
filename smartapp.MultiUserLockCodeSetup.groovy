@@ -52,10 +52,10 @@ def usersSetup() {
 
 	dynamicPage(name: "usersSetup", title: "Users Setup", nextPage: Notifications) {
 /*
-	section("Delete User" ) {
-		input "deleteUser", title: "Lock User id ", "string", description: "Lock User ", required: false
-		input "deleteCode", "text", title: "Code", required: false
-	}
+		section("Delete User" ) {
+			input "deleteUser", title: "Lock User id ", "string", description: "Lock User ", required: false
+			input "deleteCode", "text", title: "Code", required: false
+		}
 */
     	for (int i = 1; ((i <= settings.usersCount) && (i<= 10)); i++) {
 	    	section("User " + i + " Setup") {
@@ -73,6 +73,10 @@ def usersSetup() {
 def Notifications() {
 
 	dynamicPage(name: "Notifications", title: "Other Options", install: true) {
+		section( "Notifications" ) {
+			input "sendPushMessage", "enum", title: "Send a push notification?", metadata:[values:["Yes","No"]], required:false
+			input "phone", "phone", title: "Send a Text Message?", required: false
+		}
 		section([mobileOnly:true]) {
 			label title: "Assign a name for this SmartApp", required: false
 		}
@@ -138,6 +142,7 @@ private def changeLockCode() {
         
         
 	}
+	if ( sendPushMessage != "No" ) runIn(30,"sendConfirmationMsgLater") 
 
 /*
 	if ((deleteUser != null) && (deleteCode !=null)) {
@@ -158,4 +163,37 @@ private def changeLockCode() {
 */
 }
 
+private def sendConfirmationMsgLater() { 
+
+	for (int i = 1; ((i <= settings.usersCount) && (i<= 10)); i++) {
+
+/*
+		def key = "delete$i"
+		def deleteFlag = settings[key]
+*/        
+		def key = "user$i"
+		Integer user = settings[key]?.toInteger()
+        
+		key = "userName$i"
+		def username = settings[key]
+        
+		String msg = "MultiUserLockCodeSetup> set code for ${username} at lock user id ${user} for lock ${lock1} as requested"
+		send(msg)
+	}
+	        
+}
+
+
+private send(msg) {
+	if ( sendPushMessage != "No" ) {
+		log.debug( "sending push message" )
+		sendPush( msg )
+	}
+
+	if ( phone ) {
+		log.debug( "sending text message" )
+		sendSms( phone, msg )
+	}
+	log.debug msg
+}
 
