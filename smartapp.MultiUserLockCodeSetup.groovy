@@ -177,7 +177,7 @@ private def sendConfirmationMsgLater() {
 		key = "userName$i"
 		def username = settings[key]
         
-		String msg = "MultiUserLockCodeSetup> set code for ${username} at lock user id ${user} for lock ${lock1} as requested"
+		String msg = "MultiUserLockCodeSetup> set code for ${username} at lock user id ${user} on lock ${lock1} as requested"
 		send(msg)
 	}
 	        
