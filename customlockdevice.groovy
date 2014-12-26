@@ -39,7 +39,7 @@ metadata {
 			state "unlocking", label:'unlocking', icon:"st.locks.lock.unlocked", backgroundColor:"#ffffff"
 		}
 		valueTile("usercode", "device.usercode", inactiveLabel: false, decoration: "flat") {
-			state "usercode", label:'${currentValue.toString()}', unit:""
+			state "usercode", label:'${currentValue}', unit:""
 		}
         
 		standardTile("lock", "device.lock", inactiveLabel: false, decoration: "flat") {
