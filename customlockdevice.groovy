@@ -39,7 +39,7 @@ metadata {
 			state "unlocking", label:'unlocking', icon:"st.locks.lock.unlocked", backgroundColor:"#ffffff"
 		}
 		valueTile("usercode", "device.usercode", inactiveLabel: false, decoration: "flat") {
-			state "usercode", label:'${currentValue}', unit:""
+			state "usercode", label:'${currentValue.toString()}', unit:""
 		}
         
 		standardTile("lock", "device.lock", inactiveLabel: false, decoration: "flat") {
@@ -440,7 +440,7 @@ def lockAndCheck(doorLockMode) {
 	secureSequence([
 		zwave.doorLockV1.doorLockOperationSet(doorLockMode: doorLockMode),
 		zwave.doorLockV1.doorLockOperationGet()
-	], 2500)
+	], 3200)
 }
 
 def lock() {
