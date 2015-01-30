@@ -51,17 +51,13 @@ def controllerSetup() {
 def usersSetup() {
 
 	dynamicPage(name: "usersSetup", title: "Users Setup", nextPage: Notifications) {
-/*
-		section("Delete User" ) {
-			input "deleteUser", title: "Lock User id ", "string", description: "Lock User ", required: false
-			input "deleteCode", "text", title: "Code", required: false
-		}
-*/
+
     	for (int i = 1; ((i <= settings.usersCount) && (i<= 10)); i++) {
 	    	section("User " + i + " Setup") {
 				input "userName" + i, title: "User Name", "string", description: "User Name " + i, required: false
 				input "user" + i, title: "Lock User id ", "string", description: "Lock User " + i, required: false
 				input "code" + i, "text", title: "Code", required: false
+				input "delete" + i, "enum", title: "Delete User?", required: false, metadata: [values: ["Yes","No"]]
 			}
             
 		}
@@ -95,7 +91,7 @@ def updated() {
 
 def initialize() {
 	subscribe(app, appTouch)
-	subscribe(lock1, "usercode", usercodeget)
+    subscribe(lock1, "codeReport", codereturn)
 	changeLockCode()
 }
 
@@ -111,15 +107,14 @@ def usercodeget(evt){
 
 
 private def changeLockCode() {
-	def key
-    def deleteFlag =1
 
 	for (int i = 1; ((i <= settings.usersCount) && (i<= 10)); i++) {
 
-/*
+
 		def key = "delete$i"
-		def deleteFlag = settings[key]
-*/        
+		def delete = settings[key]
+		def deleteFlag = (delete!=null)? delete: 'No'   // deleteFlag = 'No' by default
+        
 		key = "user$i"
 		Integer user = settings[key]?.toInteger()
         
@@ -130,55 +125,59 @@ private def changeLockCode() {
 		def username = settings[key]
         
    
-		log.debug "Current Code for ${username}, Lock User id ${user} : ${code} "
-		if ((user!=null) && (code != null)) {
-/*
+		if ((deleteFlag=='No') && ((user!=null) && (code != null))) {
+
+			log.debug "Current Code for ${username}, Lock User id ${user} : ${code} "
 			lock1.setCode(user, code)
-*/
+/*
 			lock1.usercodechange(user, code, deleteFlag)
-			String msg = "MultiUserLockCodeSetup>set code for ${username} at lock user id ${user}, deleteFlag=$deleteFlag as requested"
+*/            
+			String msg = "MultiUserLockCodeSetup>about to submit set code for ${username} at lock user id ${user}"
 			log.debug(msg)
- 		} 
-        
+            
+ 		} else  if ((deleteFlag=='Yes') && (user!=null)) {
+
+			lock1.deleteCode(user)
+
+/*
+		    lock1.usercodechange(user, code, deleteFlag)
+*/
+			String msg = "MultiUserLockCodeSetup>about to submit delete code for ${username} at lock user id ${user}, deleteFlag=$deleteFlag as requested"
+			log.debug(msg)
+         }
         
 	}
+        
 	if ( sendPushMessage != "No" ) runIn(30,"sendConfirmationMsgLater") 
 
-/*
-	if ((deleteUser != null) && (deleteCode !=null)) {
-		deleteFlag=0
-		Integer user = settings.deleteUser?.toInteger()
-		String code = settings.deleteCode?.toString()
 
-		lock1.deleteCode(user)
-
-
-		lock1.usercodechange(user, code, deleteFlag)
-
-
-		String msg = "MultiUserLockCodeSetup>delete code for ${username} at lock user id ${user}"
-    
-	}
-
-*/
 }
 
+
 private def sendConfirmationMsgLater() { 
+    String msg 
 
 	for (int i = 1; ((i <= settings.usersCount) && (i<= 10)); i++) {
 
-/*
-		def key = "delete$i"
-		def deleteFlag = settings[key]
-*/        
 		def key = "user$i"
 		Integer user = settings[key]?.toInteger()
-        
+
+        key = "delete$i"
+		def delete = settings[key]
+
+		def deleteFlag = (delete!=null)? delete: 'No'   // deleteFlag = 'No' by default
 		key = "userName$i"
 		def username = settings[key]
         
-		String msg = "MultiUserLockCodeSetup> set code for ${username} at lock user id ${user} on lock ${lock1} as requested"
-		send(msg)
+		if ((deleteFlag=='No') && (user!=null)) {
+			msg = "MultiUserLockCodeSetup> request to set code for ${username} at lock user id ${user} will be submitted to lock ${lock1}"
+			send(msg)
+ 		} else  if ((deleteFlag=='Yes') && (user!=null)) {
+			msg = "MultiUserLockCodeSetup> request to delete code for ${username} at lock user id ${user} will be submitted to lock ${lock1}"
+			send(msg)
+		}
+
+
 	}
 	        
 }
@@ -197,3 +196,17 @@ private send(msg) {
 	log.debug msg
 }
 
+
+
+def codereturn(evt){
+	String msg
+    
+	def codenumber = evt.data.replaceAll("\\D+","");
+	if (codenumber == "") {
+		msg "MultiUserLockCodeSetup>request to delete user $evt.value is now completed"
+	} else {
+		msg= "MultiUserLockCodeSetup>request to set code $codenumber for user $evt.value is now completed"
+	}
+	send msg    
+    
+}
