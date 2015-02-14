@@ -1,4 +1,4 @@
-/metadata {
+metadata {
 	// Automatically generated. Make future change here.
 	definition (name: "Custom Z-Wave Lock", namespace: "yracine", author: "SmartThings") {
 		capability "Actuator"
@@ -417,7 +417,7 @@ def lockAndCheck(doorLockMode) {
 	secureSequence([
 		zwave.doorLockV1.doorLockOperationSet(doorLockMode: doorLockMode),
 		zwave.doorLockV1.doorLockOperationGet()
-	], 3200)
+	], 1200)
 }
 
 def lock() {
