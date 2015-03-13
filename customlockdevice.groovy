@@ -417,7 +417,7 @@ def lockAndCheck(doorLockMode) {
 	secureSequence([
 		zwave.doorLockV1.doorLockOperationSet(doorLockMode: doorLockMode),
 		zwave.doorLockV1.doorLockOperationGet()
-	], 5200)
+	], 2200)
 }
 
 def lock() {
