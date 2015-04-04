@@ -2,6 +2,7 @@
  *  MultiUserLockCodeSetup
  *
  *  Copyright 2014 Yves Racine
+ *  linkedIn profile: ca.linkedin.com/pub/yves-racine-m-sc-a/0/406/4b/
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -91,7 +92,7 @@ def updated() {
 
 def initialize() {
 	subscribe(app, appTouch)
-    subscribe(lock1, "codeReport", codereturn)
+    subscribe(lock1, "codeReport", codereturn, [filterEvents:false])
 	changeLockCode()
 }
 
@@ -203,7 +204,7 @@ def codereturn(evt){
     
 	def codenumber = evt.data.replaceAll("\\D+","");
 	if (codenumber == "") {
-		msg "MultiUserLockCodeSetup>request to delete user $evt.value is now completed"
+		msg="MultiUserLockCodeSetup>request to delete user $evt.value is now completed"
 	} else {
 		msg= "MultiUserLockCodeSetup>request to set code $codenumber for user $evt.value is now completed"
 	}
